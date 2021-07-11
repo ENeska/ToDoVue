@@ -1,16 +1,42 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+<div>
+<ListTask :repositories="repositories"/>
+<AddTask @addTask="addTask"/>
+</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AddTask from './components/AddTask.vue'
+import ListTask from './components/ListTask.vue'
+import { getAllTask } from "../api/repositories/FetchTaskRepository";
+import { ref } from "vue";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    AddTask,
+    ListTask
+  },
+  setup() {
+    const repositories = ref([]);
+    const getTasksRepositories = async () => {
+      repositories.value = await getAllTask();
+    };
+
+    getTasksRepositories();
+    return {
+      repositories,
+      getTasksRepositories,
+    };
+  },
+  
+   methods: {
+    addTask(data) {
+
+      this.repositories.push(data);
+     
+    },
+  },
 }
 </script>
 
